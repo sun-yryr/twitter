@@ -11,7 +11,7 @@ def main(oauth):
     url_read = "https://api.twitter.com/1.1/statuses/home_timeline.json"
     url_myread = "https://api.twitter.com/1.1/statuses/user_timeline.json"
     
-    f = open("hdd1/dev/id.txt","r+")
+    f = open("hdd1/dev/bot/id.txt","r+")
     Twi_id = f.read()
     
     params = {
