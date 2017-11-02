@@ -7,8 +7,8 @@ from requests_oauthlib import OAuth1Session
 import config
 
 def main(oauth):
-    url_tweet = "https://api.twitter.com/1.1/statuses/update.json"
-    url_read = "https://api.twitter.com/1.1/statuses/home_timeline.json"
+    #url_tweet = "https://api.twitter.com/1.1/statuses/update.json"
+    #url_read = "https://api.twitter.com/1.1/statuses/home_timeline.json"
     url_myread = "https://api.twitter.com/1.1/statuses/user_timeline.json"
     
     f = open("hdd1/dev/bot/id.txt","r+")

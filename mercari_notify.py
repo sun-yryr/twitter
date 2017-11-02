@@ -48,13 +48,15 @@ def main():
                     if int(price) <= 18000:
                         message = "・" + name + " : " + price + "円\n#ゆるゆるめも\n" + url
                         twitter(message)
-                    else
+                        #print(message)
+                    else:
                         pass
                 elif name.find("iPhone6")!= -1:
                     if int(price) <= 13000:
                         message = "・" + name + " : " + price + "円\n#ゆるゆるめも\n" + url
                         twitter(message)
-                    else
+                        #print(message)
+                    else:
                         pass
             elif price == oldprice:
                 break
