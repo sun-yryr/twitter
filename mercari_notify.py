@@ -21,7 +21,7 @@ def main():
         oldprice = f.read()
         f.close()
         os.remove("hdd1/dev/bot/mer_price.txt")
-        for i in range(1,11):
+        for i in range(1,20):
             data = alldata[i]
             name = data.split('<h3 class="items-box-name font-2">')[1]
             name = name.split('</h3>')[0]
@@ -43,19 +43,19 @@ def main():
                 f.close()
             
             #ここを変えることで指定値段以上・以下にする
-            if price != oldprice and int(price)>=7000:
+            if price != oldprice and int(price)>=8000 and name.find("ジャンク")==-1:
                 if name.find("iPhone6S")!= -1 or name.find("iPhone6s")!=- 1:
-                    if int(price) <= 18000:
+                    if int(price) <= 20000:
                         message = "・" + name + " : " + price + "円\n#ゆるゆるめも\n" + url
                         twitter(message)
                         #print(message)
                     else:
                         pass
-                elif name.find("iPhone6")!= -1:
-                    if int(price) <= 13000:
+                elif name.find("iPhone7")!= -1:
+                    if int(price) <= 50000:
                         message = "・" + name + " : " + price + "円\n#ゆるゆるめも\n" + url
                         twitter(message)
-                        #print(message)
+                        notify(url)
                     else:
                         pass
             elif price == oldprice:
@@ -77,6 +77,14 @@ def twitter(message):
     req = oauth.post(url_tweet, params = params)
     if req.status_code != 200:
         print ("Error: %d" % req.status_code)
+
+def notify(text):
+    url = "https://notify-api.line.me/api/notify"
+    token = config.LINE_token2
+    headers = {"Authorization" : "Bearer" + " " + token}
+    payload = {"message" : text}
+    r = requests.post(url ,headers = headers ,params = payload)
+    print r.status_code
 
 
 if __name__ == '__main__':
