@@ -84,7 +84,7 @@ def notify(text):
     headers = {"Authorization" : "Bearer" + " " + token}
     payload = {"message" : text}
     r = requests.post(url ,headers = headers ,params = payload)
-    print r.status_code
+    #print r.status_code
 
 
 if __name__ == '__main__':
