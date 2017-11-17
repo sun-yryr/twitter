@@ -17,7 +17,7 @@ def main():
         alldata = r.text.split('<div class="items-box-content clearfix">')[1]
         alldata = alldata.split('<ul class="pager">')[0]
         alldata = alldata.split('<section class="items-box">')
-        f = open("hdd1/dev/bot/mer_price.txt","r")
+        f = open("/home/pi/hdd1/dev/bot/mer_price.txt","r")
         oldprice = f.read()
         f.close()
         os.remove("hdd1/dev/bot/mer_price.txt")
@@ -37,7 +37,7 @@ def main():
             url = url.encode('utf-8')
             
             if i == 1:
-                f = open("hdd1/dev/bot/mer_price.txt","w")
+                f = open("/home/pi/hdd1/dev/bot/mer_price.txt","w")
                 f.seek(0)
                 f.write(price)
                 f.close()
