@@ -14,20 +14,17 @@ import function as f
 # message.react('icon_emoji')  発言者のメッセージにリアクション(スタンプ)する
 
 
-@respond_to(u'メンション')
+@respond_to('help')
 def mention_func(message):
-    message.reply('私にメンションと言ってどうするのだ')
+    message.reply('cmd一覧:train, clean, duty')
 
 @listen_to(r'^!get\s(\S+)')
 def listen(message, cmd):
-    print cmd
     if cmd=='train':
         message.reply('運行状況')
     elif cmd=='clean':
-        message.reply('今週の掃除当番')
+        message.reply('今週の掃除当番は\n%sです' % f.touban(0))
+    elif cmd=='duty':
+        message.reply('今週の日直は\n%sです' % f.touban(1))
     else :
         message.reply('NotCommand')
-
-@respond_to('Give me (.*)', re.IGNORECASE)
-def giveme(message, something):
-    message.reply('Here is {}'.format(something))
