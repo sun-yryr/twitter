@@ -18,10 +18,24 @@ import function as f
 def mention_func(message):
     message.reply('cmd一覧:train, clean, duty')
 
-@listen_to(r'^!get\s(\S+)')
-def listen(message, cmd):
+@listen_to(r'^!get\s(\S+)\s*(.*)')
+def listen(message, cmd, req):
     if cmd=='train':
-        message.reply('運行状況')
+        if req=="all":
+            data = f.traininfo("all")
+            msg = ""
+            for i in data:
+                msg += ("%s\n" %i)
+            msg = msg.encode('utf-8')
+            message.reply('運行状況\n%s' %msg)
+        elif len(f.traininfo())==0:
+            message.reply('乱れは無いようです...')
+        else:
+            msg = ""
+            for i in data:
+                msg += ("%s\n" %i)
+            msg = msg.encode('utf-8')
+            message.reply('遅延情報\n%s' %msg)
     elif cmd=='clean':
         message.reply('今週の掃除当番は\n%sです' % f.touban(0))
     elif cmd=='duty':
