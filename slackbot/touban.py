@@ -21,15 +21,15 @@ def main():
     print a
     print b
 
-    os.remove("/Users/sun-mba/develop/bot/slackbot/plugins/num.txt")
-    f = open("/Users/sun-mba/develop/bot/slackbot/plugins/num.txt","w")
+    os.remove("/home/pi/hdd1/dev/bot/slackbot/plugins/num.txt")
+    f = open("/home/pi/hdd1/dev/bot/slackbot/plugins/num.txt","w")
     f.write(str(count[0]))
     f.write('\n')
     f.write(str(count[1]))
     f.close()
 
 def openmember():
-    f = open("/Users/sun-mba/develop/bot/slackbot/plugins/3j.txt","r")
+    f = open("/home/pi/hdd1/dev/bot/slackbot/plugins/3j.txt","r")
     members = f.readlines()
     f.close()
     for i in range(len(members)):
@@ -38,7 +38,7 @@ def openmember():
     return members
 
 def opennumber():
-    f = open("/Users/sun-mba/develop/bot/slackbot/plugins/num.txt","r")
+    f = open("/home/pi/hdd1/dev/bot/slackbot/plugins/num.txt","r")
     num = f.readlines()
     f.close()
     for i in range(len(num)):

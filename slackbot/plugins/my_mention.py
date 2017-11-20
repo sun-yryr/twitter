@@ -32,6 +32,7 @@ def listen(message, cmd, req):
             message.reply('乱れは無いようです...')
         else:
             msg = ""
+	    data = f.traininfo()
             for i in data:
                 msg += ("%s\n" %i)
             msg = msg.encode('utf-8')
