@@ -45,7 +45,7 @@ def ktx(usernumber):
     payload = {
         'password': '+81-42-668-5061'
     }
-    retMsg = "-------\n"
+    retMsg = ""
     count = 1
     
     
@@ -64,7 +64,7 @@ def ktx(usernumber):
         if len(tr) > 1:
             #表の行数が変わるので結果のぶんだけ表示させるようにする
             elements = len(tr[0].find_all("th"))
-            retMsg += "[第" + str(count) + "回]\n"
+            retMsg += "[第" + str(count) + "回]"
             for user in tr:
                 #引数で与えられた人の提出状況を確認
                 if user.th.string == usernumber:
@@ -75,7 +75,6 @@ def ktx(usernumber):
                     else:
                         retMsg += "\n"
         count = count + 1
-    retMsg += "-------\n"
     return retMsg
 
 

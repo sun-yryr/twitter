@@ -39,9 +39,11 @@ def listen(message, cmd, req):
             message.reply('遅延情報\n%s' %msg)
 
     elif cmd=='ktx':
-        if req==(r'^[0-4][0-9]'):
+        
+        if re.compile(r'[0-4][0-9]').search(req):
             i = "3J" + req
-            msg = f.ktx(i)
+            msg = "\n"
+            msg += f.ktx(i)
             message.reply(msg)
         else:
             message.reply('出席番号を入力してさい')
