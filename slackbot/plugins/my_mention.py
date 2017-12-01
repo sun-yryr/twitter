@@ -16,7 +16,7 @@ import function as f
 
 @respond_to('help')
 def mention_func(message):
-    message.reply('cmd一覧:train, clean, duty')
+    message.reply('cmd一覧:train( all), clean, duty, ktx 出席番号')
 
 @listen_to(r'^!get\s(\S+)\s*(.*)')
 def listen(message, cmd, req):
@@ -37,9 +37,20 @@ def listen(message, cmd, req):
                 msg += ("%s\n" %i)
             msg = msg.encode('utf-8')
             message.reply('遅延情報\n%s' %msg)
+
+    elif cmd=='ktx':
+        if req==(r'^[0-4][0-9]'):
+            i = "3J" + req
+            msg = f.ktx(i)
+            message.reply(msg)
+        else:
+            message.reply('出席番号を入力してさい')
+
     elif cmd=='clean':
         message.reply('今週の掃除当番は\n%sです' % f.touban(0))
+
     elif cmd=='duty':
         message.reply('今週の日直は\n%sです' % f.touban(1))
+
     else :
         message.reply('NotCommand')

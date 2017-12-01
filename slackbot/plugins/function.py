@@ -38,6 +38,47 @@ def traininfo(req=""):
             pass
 
     return data
+
+def ktx(usernumber):
+    K_URL = "https://nittc.tokyo-ct.ac.jp/usr/kitakosi/LEE/PracProgI/"
+    url = "https://nittc.tokyo-ct.ac.jp/xythoswfs/webui/_xy-e4168359_7-t_C5zhSCja"
+    payload = {
+        'password': '+81-42-668-5061'
+    }
+    retMsg = "-------\n"
+    count = 1
+    
+    
+    req = requests.session()
+    req.post(url, data=payload)
+    r = req.get(K_URL + "PracProgI_TOP.html")
+    r = req.get(K_URL + "assignments/Check_Table.html")
+    
+    soup = BeautifulSoup(r.text, "html.parser")
+    
+    alldata = soup.find_all("table", border="1")
+    #<table border="1">を抽出
+    for list in reversed(alldata):
+        #<tr>が1つしかなかったら対象ではないから除外
+        tr = list.find_all("tr")
+        if len(tr) > 1:
+            #表の行数が変わるので結果のぶんだけ表示させるようにする
+            elements = len(tr[0].find_all("th"))
+            retMsg += "[第" + str(count) + "回]\n"
+            for user in tr:
+                #引数で与えられた人の提出状況を確認
+                if user.th.string == usernumber:
+                    td = user.find_all("td")
+                    for i in range(elements-2):
+                        if not isinstance(td[i].string, type(None)):
+                            retMsg += td[i].string.encode("utf-8") + " "
+                    else:
+                        retMsg += "\n"
+        count = count + 1
+    retMsg += "-------\n"
+    return retMsg
+
+
 #return msg
 #msg = "http://traininfo.jreast.co.jp" + tr.img.get("src")
 #return msg.encode('utf-8')
