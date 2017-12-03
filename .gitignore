@@ -1,4 +1,6 @@
+nohup.out
 config.py
+.DS_Store
 *.pyc
 *.txt
 .*.py
