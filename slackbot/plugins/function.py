@@ -1,5 +1,6 @@
 # coding: utf-8
-import sys,os
+import sys
+import os
 sys.path.append(os.pardir)
 import touban as T
 from bs4 import BeautifulSoup
@@ -31,9 +32,9 @@ def traininfo(req=""):
         status = status.replace("\n","")
         if status!=(u"平常運転") or req=="all":
             title = main.find(class_="title").string
-            note = mdSS.p.get_text()
-            data.append("[*%s*]%s\n>%s" % (title, status, note))
-            #print ("[*%s*]%s\n%s" % (title, status, note))
+            msg = mdSS.p.get_text()
+            data.append("[*%s*]%s\n>%s" % (title, status, msg))
+            #print ("[*%s*]%s\n%s" % (title, status, msg)
         else:
             pass
 
@@ -55,20 +56,20 @@ def ktx(usernumber):
     r = req.get(K_URL + "assignments/Check_Table.html")
     
     soup = BeautifulSoup(r.text, "html.parser")
-    
-    alldata = soup.find_all("table", border="1")
     #<table border="1">を抽出
+    alldata = soup.find_all("table", border="1")
     for list in reversed(alldata):
         #<tr>が1つしかなかったら対象ではないから除外
         tr = list.find_all("tr")
         if len(tr) > 1:
-            #表の行数が変わるので結果のぶんだけ表示させるようにする
+            #表の列数を取得する
             elements = len(tr[0].find_all("th"))
             retMsg += "[第" + str(count) + "回]"
             for user in tr:
                 #引数で与えられた人の提出状況を確認
                 if user.th.string == usernumber:
                     td = user.find_all("td")
+                    #表の列数分ループ（列数3なら2回ループ-> 0-1のループなので-2する）
                     for i in range(elements-2):
                         if not isinstance(td[i].string, type(None)):
                             retMsg += td[i].string.encode("utf-8") + " "
