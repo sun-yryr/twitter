@@ -21,15 +21,17 @@ def main():
     print a
     print b
 
-    os.remove("/home/pi/hdd1/dev/bot/slackbot/plugins/num.txt")
-    f = open("/home/pi/hdd1/dev/bot/slackbot/plugins/num.txt","w")
+    Path = os.getcwd()
+    os.remove(Path+"/plugins/num.txt")
+    f = open(Path+"/plugins/num.txt","w")
     f.write(str(count[0]))
     f.write('\n')
     f.write(str(count[1]))
     f.close()
 
 def openmember():
-    f = open("/home/pi/hdd1/dev/bot/slackbot/plugins/3j.txt","r")
+    Path = os.getcwd()
+    f = open(Path+"/plugins/3j.txt","r")
     members = f.readlines()
     f.close()
     for i in range(len(members)):
@@ -38,7 +40,8 @@ def openmember():
     return members
 
 def opennumber():
-    f = open("/home/pi/hdd1/dev/bot/slackbot/plugins/num.txt","r")
+    Path = os.getcwd()
+    f = open(Path+"/plugins/num.txt","r")
     num = f.readlines()
     f.close()
     for i in range(len(num)):
