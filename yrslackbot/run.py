@@ -37,7 +37,7 @@ def message(dict):
             #コマンドを指示する？
             pass
         else:
-            elif "train" == result.group(1):
+            if "train" == result.group(1):
                 #運行状況
                 if "all" == result.group(2):
                     data = f.traininfo("all")
