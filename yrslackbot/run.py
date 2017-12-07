@@ -36,36 +36,37 @@ def message(dict):
         if result is None:
             #コマンドを指示する？
             pass
-        elif "train" == result.group(1):
-            #運行状況
-            if "all" == result.group(2):
-                data = f.traininfo("all")
-                msg += ("運行状況\n")
-                for i in data:
-                    i = i.encode("utf-8")
-                    msg += ("%s\n" %i)
-            elif len(f.traininfo())==0:
-                msg = ("乱れは無いようです...")
-            else:
-                data = f.traininfo()
-                msg += ("遅延情報\n")
-                for i in data:
-                    i = i.encode("utf-8")
-                    msg += ("%s\n" %i)
-        elif "ktx" == result.group(1):
-            if re.compile(r'[0-4][0-9]').search(result.group(2)):
-                username = ("3J" + result.group(2))
-                msg = ("\n")
-                msg += f.ktx(username)
-            else:
-                msg = ("出席番号を入力してください")
-        elif "duty" == result.group(1):
-            msg = ("今週の日直は\n%sです" % f.touban(1))
-        elif "clean" == result.group(1):
-            msg = ("今週の掃除当番は\n%sです" % f.touban(0))
+        else:
+            elif "train" == result.group(1):
+                #運行状況
+                if "all" == result.group(2):
+                    data = f.traininfo("all")
+                    msg += ("運行状況\n")
+                    for i in data:
+                        i = i.encode("utf-8")
+                        msg += ("%s\n" %i)
+                elif len(f.traininfo())==0:
+                    msg = ("乱れは無いようです...")
+                else:
+                    data = f.traininfo()
+                    msg += ("遅延情報\n")
+                    for i in data:
+                        i = i.encode("utf-8")
+                        msg += ("%s\n" %i)
+            elif "ktx" == result.group(1):
+                if re.compile(r'[0-4][0-9]').search(result.group(2)):
+                    username = ("3J" + result.group(2))
+                    msg = ("\n")
+                    msg += f.ktx(username)
+                else:
+                    msg = ("出席番号を入力してください")
+            elif "duty" == result.group(1):
+                msg = ("今週の日直は\n%sです" % f.touban(1))
+            elif "clean" == result.group(1):
+                msg = ("今週の掃除当番は\n%sです" % f.touban(0))
 
-        user = dict["user"].encode("utf-8")
-        sendSC("<@"+user+">:"+msg, dict["channel"])
+            user = dict["user"].encode("utf-8")
+            sendSC("<@"+user+">:"+msg, dict["channel"])
     timeStump = dict["ts"]
     
 
