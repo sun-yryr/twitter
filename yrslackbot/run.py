@@ -64,6 +64,8 @@ def message(dict):
                 msg = ("今週の日直は\n%sです" % f.touban(1))
             elif "clean" == result.group(1):
                 msg = ("今週の掃除当番は\n%sです" % f.touban(0))
+            else:
+                msg = (result.group(1))
 
             user = dict["user"].encode("utf-8")
             sendSC("<@"+user+">:"+msg, dict["channel"])
