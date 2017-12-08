@@ -8,8 +8,8 @@ sys.path.append('..')
 import config
 
 SC = SlackClient(config.slack_token)
-timeStump = "0"
 prog = re.compile("^!get\s(\S+)\s*(.*)")
+timedict = {}
 
 def main():
     global timeStump
@@ -64,13 +64,21 @@ def message(dict):
                 msg = ("今週の日直は\n%sです" % f.touban(1))
             elif "clean" == result.group(1):
                 msg = ("今週の掃除当番は\n%sです" % f.touban(0))
+            elif "help" == result.group(1):
+                msg = ("\n掃除当番[clean]\n日直[duty]\n鉄道運行状況[train (all)]\n北越[ktx]")
+            elif "set" == result.group(1):
+                if "U30T49610" == dict["user"]:
+                    msg = ("OK")
+                else:
+                    msg = ("権限がありません")
             else:
                 msg = (result.group(1))
 
             user = dict["user"].encode("utf-8")
-            sendSC("<@"+user+">:"+msg, dict["channel"])
-    timeStump = dict["ts"]
-    
+            res = sendSC("<@"+user+">:"+msg, dict["channel"])
+            #削除用のtsを保存する
+            global timedict
+            timedict[res["ts"]] = res["channel"]
 
 def sendSC(msg, ch):
     res = SC.api_call(
@@ -81,15 +89,22 @@ def sendSC(msg, ch):
         )
     return res
     
-def replySC(msg, ch, ts):
+def replySC(msg, ch, timeStump):
     res = SC.api_call(
         "chat.postMessage",
         channel = ch,
         text = msg,
         as_user = True,
-        thread_ts = ts
+        thread_ts = timeStump
         )
     return res
+    
+def delete(ch, timeStump):
+    SC.api_call(
+        "chat.delete",
+        channel = ch,
+        ts = timeStump
+    )
 
 if __name__ == '__main__':
     if SC.rtm_connect():
@@ -97,6 +112,13 @@ if __name__ == '__main__':
         #messageの時間取得用
         while True:
             main()
+            now = int(time.time())
+            for ts in timedict.keys():
+                timeStump = int(ts.split(".")[0])
+                timeStump = timeStump + 300
+                if now > timeStump:
+                    delete(timedict[ts], ts)
             time.sleep(1)
+                
     else:
         pass
