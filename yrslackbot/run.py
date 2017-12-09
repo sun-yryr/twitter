@@ -79,6 +79,7 @@ def message(dict):
             #削除用のtsを保存する
             global timedict
             timedict[res["ts"]] = res["channel"]
+            #timedict[dict["ts"]] = dict["channel"]
 
 def sendSC(msg, ch):
     res = SC.api_call(
@@ -100,11 +101,12 @@ def replySC(msg, ch, timeStump):
     return res
     
 def delete(ch, timeStump):
-    SC.api_call(
+    res = SC.api_call(
         "chat.delete",
         channel = ch,
         ts = timeStump
-    )
+        )
+    return res
 
 if __name__ == '__main__':
     if SC.rtm_connect():
@@ -115,10 +117,11 @@ if __name__ == '__main__':
             now = int(time.time())
             for ts in timedict.keys():
                 timeStump = int(ts.split(".")[0])
-                timeStump = timeStump + 300
+                timeStump = timeStump + 20
                 if now > timeStump:
-                    delete(timedict[ts], ts)
+                    r = delete(timedict[ts], ts)
                     del timedict[ts]
+                    print r
             time.sleep(1)
                 
     else:
