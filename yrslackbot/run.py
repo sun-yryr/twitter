@@ -117,7 +117,7 @@ if __name__ == '__main__':
             now = int(time.time())
             for ts in timedict.keys():
                 timeStump = int(ts.split(".")[0])
-                timeStump = timeStump + 20
+                timeStump = timeStump + 300
                 if now > timeStump:
                     r = delete(timedict[ts], ts)
                     del timedict[ts]
