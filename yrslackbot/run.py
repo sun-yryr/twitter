@@ -118,6 +118,7 @@ if __name__ == '__main__':
                 timeStump = timeStump + 300
                 if now > timeStump:
                     delete(timedict[ts], ts)
+                    del timedict[ts]
             time.sleep(1)
                 
     else:
