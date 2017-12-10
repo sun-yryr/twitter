@@ -2,6 +2,7 @@
 import touban as T
 from bs4 import BeautifulSoup
 import requests
+import json
 
 def touban(a):
     msg = T.m_print()
@@ -75,8 +76,10 @@ def ktx(usernumber):
         count = count + 1
     return retMsg
 
-
-#return msg
-#msg = "http://traininfo.jreast.co.jp" + tr.img.get("src")
-#return msg.encode('utf-8')
-#traininfo()
+def docomo(text, APIKEY):
+    url = "https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue"
+    payload = {"APIKEY": APIKEY}
+    body = {"utt": text}
+    res = requests.post(url, params=payload, data=json.dumps(body))
+    jsondata = json.loads(res.text)
+    return jsondata["utt"]

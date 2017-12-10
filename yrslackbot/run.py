@@ -9,6 +9,7 @@ import config
 
 SC = SlackClient(config.slack_token)
 prog = re.compile("^!get\s(\S+)\s*(.*)")
+mention = re.compile("^<@U8211N9FW>\s(\S+)")
 timedict = {}
 
 def main():
@@ -31,15 +32,12 @@ def message(dict):
         pass
     else:
         #正規表現による!getとのマッチ
-        result = prog.match(dict["text"])
+        cmd = prog.match(dict["text"])
         msg = ""
-        if result is None:
-            #コマンドを指示する？
-            pass
-        else:
-            if "train" == result.group(1):
+        if cmd is not None:
+            if "train" == cmd.group(1):
                 #運行状況
-                if "all" == result.group(2):
+                if "all" == cmd.group(2):
                     data = f.traininfo("all")
                     msg += ("運行状況\n")
                     for i in data:
@@ -53,26 +51,26 @@ def message(dict):
                     for i in data:
                         i = i.encode("utf-8")
                         msg += ("%s\n" %i)
-            elif "ktx" == result.group(1):
-                if re.compile(r'[0-4][0-9]').search(result.group(2)):
-                    username = ("3J" + result.group(2))
+            elif "ktx" == cmd.group(1):
+                if re.compile(r'[0-4][0-9]').search(cmd.group(2)):
+                    username = ("3J" + cmd.group(2))
                     msg = ("\n")
                     msg += f.ktx(username)
                 else:
                     msg = ("出席番号を入力してください")
-            elif "duty" == result.group(1):
+            elif "duty" == cmd.group(1):
                 msg = ("今週の日直は\n%sです" % f.touban(1))
-            elif "clean" == result.group(1):
+            elif "clean" == cmd.group(1):
                 msg = ("今週の掃除当番は\n%sです" % f.touban(0))
-            elif "help" == result.group(1):
+            elif "help" == cmd.group(1):
                 msg = ("\n掃除当番[clean]\n日直[duty]\n鉄道運行状況[train (all)]\n北越[ktx]")
-            elif "set" == result.group(1):
+            elif "set" == cmd.group(1):
                 if "U30T49610" == dict["user"]:
                     msg = ("OK")
                 else:
                     msg = ("権限がありません")
             else:
-                msg = (result.group(1))
+                msg = ("コマンドが未登録です")
 
             user = dict["user"].encode("utf-8")
             res = sendSC("<@"+user+">:"+msg, dict["channel"])
@@ -80,6 +78,13 @@ def message(dict):
             global timedict
             timedict[res["ts"]] = res["channel"]
             #timedict[dict["ts"]] = dict["channel"]
+        else:
+            cmd = mention.match(dict["text"])
+            if cmd is not None:
+                #ドコモの人工知能に返信を任せる
+                msg = f.docomo(cmd.group(1), config.docomo_apikey)
+                user = dict["user"].encode("utf-8")
+                sendSC("<@"+user+">:"+msg, dict["channel"])
 
 def sendSC(msg, ch):
     res = SC.api_call(
