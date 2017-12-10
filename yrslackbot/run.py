@@ -11,6 +11,7 @@ SC = SlackClient(config.slack_token)
 prog = re.compile("^!get\s(\S+)\s*(.*)")
 mention = re.compile("^<@U8211N9FW>\s(\S+)")
 timedict = {}
+delTime = 300
 
 def main():
     global timeStump
@@ -38,19 +39,9 @@ def message(dict):
             if "train" == cmd.group(1):
                 #運行状況
                 if "all" == cmd.group(2):
-                    data = f.traininfo("all")
-                    msg += ("運行状況\n")
-                    for i in data:
-                        i = i.encode("utf-8")
-                        msg += ("%s\n" %i)
-                elif len(f.traininfo())==0:
-                    msg = ("乱れは無いようです...")
+                    msg = f.traininfo("all")
                 else:
-                    data = f.traininfo()
-                    msg += ("遅延情報\n")
-                    for i in data:
-                        i = i.encode("utf-8")
-                        msg += ("%s\n" %i)
+                    msg = f.traininfo()
             elif "ktx" == cmd.group(1):
                 if re.compile(r'[0-4][0-9]').search(cmd.group(2)):
                     username = ("3J" + cmd.group(2))
@@ -66,7 +57,11 @@ def message(dict):
                 msg = ("\n掃除当番[clean]\n日直[duty]\n鉄道運行状況[train (all)]\n北越[ktx]")
             elif "set" == cmd.group(1):
                 if "U30T49610" == dict["user"]:
-                    msg = ("OK")
+                    list = cmd.group(2).split(":")
+                    if "deletetime" == list[0]:
+                        global delTime
+                        delTime = int(list[1])
+                        msg = ("delTimeを" + str(delTime) + "に変更しました。")
                 else:
                     msg = ("権限がありません")
             else:
@@ -122,7 +117,7 @@ if __name__ == '__main__':
             now = int(time.time())
             for ts in timedict.keys():
                 timeStump = int(ts.split(".")[0])
-                timeStump = timeStump + 300
+                timeStump = timeStump + delTime
                 if now > timeStump:
                     r = delete(timedict[ts], ts)
                     del timedict[ts]

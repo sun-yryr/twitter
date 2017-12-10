@@ -18,8 +18,11 @@ def traininfo(req=""):
             "https://transit.yahoo.co.jp/traininfo/detail/102/0/",
             "https://transit.yahoo.co.jp/traininfo/detail/52/0/",
             "https://transit.yahoo.co.jp/traininfo/detail/31/0/"]
-    for (i, url) in enumerate(urllist):
-        r = requests.get(url)
+    for url in urllist:
+        try:
+            r = requests.get(url)
+        except:
+            return ("データを取得できませんでした。")
         #スクレイビング
         soup = BeautifulSoup(r.text, "html.parser")
         main = soup.find("div", class_="mainWrp")
@@ -35,8 +38,19 @@ def traininfo(req=""):
             #print ("[*%s*]%s\n%s" % (title, status, msg)
         else:
             pass
-
-    return data
+    if len(data) == 0:
+        msg = ("乱れはないようです...")
+    elif req == "all":
+        msg = ("運行状況\n")
+        for i in data:
+            i = i.encode("utf-8")
+            msg += (i + "\n")
+    else:
+        msg = ("遅延情報\n")
+        for i in data:
+            i = i.encode("utf-8")
+            msg += (i + "\n")
+    return msg
 
 def ktx(usernumber):
     K_URL = "https://nittc.tokyo-ct.ac.jp/usr/kitakosi/LEE/PracProgI/"
@@ -49,7 +63,10 @@ def ktx(usernumber):
     
     
     req = requests.session()
-    req.post(url, data=payload)
+    try:
+        req.post(url, data=payload)
+    except:
+        return ("接続できませんでした、しばらく待ってからもう一度お試しください。")
     r = req.get(K_URL + "PracProgI_TOP.html")
     r = req.get(K_URL + "assignments/Check_Table.html")
     
