@@ -1,6 +1,6 @@
 # coding:utf-8
 from slackclient import SlackClient
-import time
+import time, datetime
 import re
 import plugins.function as f
 import sys
@@ -11,6 +11,7 @@ SC = SlackClient(config.slack_token)
 prog = re.compile("^!get\s(\S+)\s*(.*)")
 mention = re.compile("^<@U8211N9FW>\s(\S+)")
 timedict = {}
+days = "0101"
 delTime = 300
 
 def main():
@@ -81,6 +82,12 @@ def message(dict):
                 user = dict["user"].encode("utf-8")
                 sendSC("<@"+user+">:"+msg, dict["channel"])
 
+def oneday():
+    f.ktxDownload()
+    """
+    今日はm月d日(a) : 晴れ
+    """
+
 def sendSC(msg, ch):
     res = SC.api_call(
         "chat.postMessage",
@@ -113,12 +120,17 @@ if __name__ == '__main__':
         #接続開始
         #messageの時間取得用
         while True:
+            now = datetime.datetime.now()
+            #今日初めてかつ、7時代の時oneday実行
+            if (now.strftime("%m%d")!= days) and (now.strftime("%H")== "07"):
+                oneday()
+                days = now.strftime("%m%d")
             main()
-            now = int(time.time())
+            #ここ削除
             for ts in timedict.keys():
                 timeStump = int(ts.split(".")[0])
                 timeStump = timeStump + delTime
-                if now > timeStump:
+                if int(time.time()) > timeStump:
                     r = delete(timedict[ts], ts)
                     del timedict[ts]
             time.sleep(1)

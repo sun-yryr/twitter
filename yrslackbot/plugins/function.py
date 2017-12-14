@@ -3,6 +3,7 @@ import touban as T
 from bs4 import BeautifulSoup
 import requests
 import json
+import os
     
 def touban(a):
     msg = T.m_print()
@@ -52,25 +53,32 @@ def traininfo(req=""):
             msg += (i + "\n")
     return msg
 
-def ktx(usernumber):
+def ktxDownload():
     K_URL = "https://nittc.tokyo-ct.ac.jp/usr/kitakosi/LEE/PracProgI/"
     url = "https://nittc.tokyo-ct.ac.jp/xythoswfs/webui/_xy-e4168359_7-t_C5zhSCja"
     payload = {
         'password': '+81-42-668-5061'
     }
-    retMsg = ""
-    count = 1
-    
-    
     req = requests.session()
     try:
         req.post(url, data=payload)
     except:
         return ("接続できませんでした、しばらく待ってからもう一度お試しください。")
-    r = req.get(K_URL + "PracProgI_TOP.html")
     r = req.get(K_URL + "assignments/Check_Table.html")
+    r = r.text.encode("utf-8")
+    FileName = os.getcwd()
+    FileName += "/ktx.txt"
+    f = open(FileName, "w")
+    f.write(r)
+
+def ktx(usernumber):
+    retMsg = ""
+    count = 1
+    FileName = os.getcwd()
+    FileName += "/ktx.txt"
+    f = open(FileName, "r")
     
-    soup = BeautifulSoup(r.text, "html.parser")
+    soup = BeautifulSoup(f.read(), "html.parser")
     #<table border="1">を抽出
     alldata = soup.find_all("table", border="1")
     for list in reversed(alldata):
@@ -103,3 +111,5 @@ def docomo(text, APIKEY):
     res = requests.post(url, params=payload, data=json.dumps(body))
     jsondata = json.loads(res.text)
     return jsondata["utt"]
+    
+ktxDownload()
