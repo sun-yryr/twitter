@@ -3,7 +3,7 @@ import touban as T
 from bs4 import BeautifulSoup
 import requests
 import json
-
+    
 def touban(a):
     msg = T.m_print()
     #print -> slack.message
@@ -85,9 +85,12 @@ def ktx(usernumber):
                 if user.th.string == usernumber:
                     td = user.find_all("td")
                     #表の列数分ループ（列数3なら2回ループ-> 0-1のループなので-2する）
-                    for i in range(elements-2):
-                        if not isinstance(td[i].string, type(None)):
-                            retMsg += td[i].string.encode("utf-8") + " "
+                    for i in range(elements-1):
+                        if not isinstance(td[i].get_text(), type(None)):
+                            if i == (elements-2):
+                                retMsg += "\n>" + td[i].get_text().encode("utf-8") + " "
+                            else:
+                                retMsg += td[i].get_text().encode("utf-8") + " "
                     else:
                         retMsg += "\n"
         count = count + 1
