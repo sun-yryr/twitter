@@ -63,13 +63,14 @@ def ktxDownload():
     try:
         req.post(url, data=payload)
     except:
-        return ("接続できませんでした、しばらく待ってからもう一度お試しください。")
+        return None
     r = req.get(K_URL + "assignments/Check_Table.html")
     r = r.text.encode("utf-8")
     FileName = os.getcwd()
     FileName += "/ktx.txt"
     f = open(FileName, "w")
     f.write(r)
+    return "success"
 
 def ktx(usernumber):
     retMsg = ""

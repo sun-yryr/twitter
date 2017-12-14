@@ -83,10 +83,12 @@ def message(dict):
                 sendSC("<@"+user+">:"+msg, dict["channel"])
 
 def oneday():
-    f.ktxDownload()
+    r = f.ktxDownload()
     """
     今日はm月d日(a) : 晴れ
     """
+    if r is None:
+        sendSC("J科サイトに接続できません。ktxが最新でない場合があります。", "C31GLQT47")
 
 def sendSC(msg, ch):
     res = SC.api_call(
