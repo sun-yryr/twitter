@@ -7,6 +7,8 @@ import sys
 sys.path.append('..')
 import config
 
+class SC()
+
 SC = SlackClient(config.slack_token)
 prog = re.compile("^!get\s(\S+)\s*(.*)")
 mention = re.compile("^<@U8211N9FW>\s(\S+)")
@@ -124,9 +126,10 @@ if __name__ == '__main__':
         while True:
             now = datetime.datetime.now()
             #今日初めてかつ、7時代の時oneday実行
-            if (now.strftime("%m%d")!= days) and (now.strftime("%H")== "07"):
+            if (now.strftime("%m%d")!= days) and (now.strftime("%H")== "06"):
                 oneday()
                 days = now.strftime("%m%d")
+                print "a"
             main()
             #ここ削除
             for ts in timedict.keys():
