@@ -7,9 +7,40 @@ import sys
 sys.path.append('..')
 import config
 
-class SC()
+class Slackclient():
+    def __init__(self):
+        self.slackclient = SlackClient(config.slack_token)
+        if not self.slackclient.rtm_connect():
+            sys.exit()
+    def reader(self):
+        self.read = self.slackclient.rtm_read()
+        return self.read
+    def send(self, msg, ch):
+        res = self.slackclient.api_call(
+                "chat.postMessage",
+                channel = ch,
+                text = msg,
+                as_user = True
+                )
+        return res
+    def reply(self, msg, ch, time):
+        res = self.slackclient.api_call(
+                "chat.postMessage",
+                channel = ch,
+                text = msg,
+                as_user = True,
+                thread_ts = timeStump
+                )
+        return res
+    def delete(ch, time):
+        res = self.slackclient.api_call(
+                "chat.delete",
+                channel = ch,
+                ts = timeStump
+                )
+        return res
 
-SC = SlackClient(config.slack_token)
+SC = Slackclient()
 prog = re.compile("^!get\s(\S+)\s*(.*)")
 mention = re.compile("^<@U8211N9FW>\s(\S+)")
 timedict = {}
@@ -18,7 +49,8 @@ delTime = 300
 
 def main():
     global timeStump
-    read = SC.rtm_read()
+    read = SC.reader()
+    print read
     #readがリストの場合がある
     for dict in read:
         type = dict.get("type")
@@ -71,7 +103,7 @@ def message(dict):
                 msg = ("コマンドが未登録です")
 
             user = dict["user"].encode("utf-8")
-            res = sendSC("<@"+user+">:"+msg, dict["channel"])
+            res = SC.send("<@"+user+">:"+msg, dict["channel"])
             #削除用のtsを保存する
             global timedict
             timedict[res["ts"]] = res["channel"]
@@ -82,7 +114,7 @@ def message(dict):
                 #ドコモの人工知能に返信を任せる
                 msg = f.docomo(cmd.group(1), config.docomo_apikey)
                 user = dict["user"].encode("utf-8")
-                sendSC("<@"+user+">:"+msg, dict["channel"])
+                SC.send("<@"+user+">:"+msg, dict["channel"])
 
 def oneday():
     r = f.ktxDownload()
@@ -92,53 +124,22 @@ def oneday():
     if r is None:
         sendSC("J科サイトに接続できません。ktxが最新でない場合があります。", "C31GLQT47")
 
-def sendSC(msg, ch):
-    res = SC.api_call(
-        "chat.postMessage",
-        channel = ch,
-        text = msg,
-        as_user = True
-        )
-    return res
-    
-def replySC(msg, ch, timeStump):
-    res = SC.api_call(
-        "chat.postMessage",
-        channel = ch,
-        text = msg,
-        as_user = True,
-        thread_ts = timeStump
-        )
-    return res
-    
-def delete(ch, timeStump):
-    res = SC.api_call(
-        "chat.delete",
-        channel = ch,
-        ts = timeStump
-        )
-    return res
-
 if __name__ == '__main__':
-    if SC.rtm_connect():
-        #接続開始
-        #messageの時間取得用
-        while True:
-            now = datetime.datetime.now()
-            #今日初めてかつ、7時代の時oneday実行
-            if (now.strftime("%m%d")!= days) and (now.strftime("%H")== "06"):
-                oneday()
-                days = now.strftime("%m%d")
-                print "a"
-            main()
-            #ここ削除
-            for ts in timedict.keys():
-                timeStump = int(ts.split(".")[0])
-                timeStump = timeStump + delTime
-                if int(time.time()) > timeStump:
-                    r = delete(timedict[ts], ts)
-                    del timedict[ts]
-            time.sleep(1)
-                
-    else:
-        pass
+    #接続開始
+    #messageの時間取得用
+    while True:
+        now = datetime.datetime.now()
+        #今日初めてかつ、7時代の時oneday実行
+        if (now.strftime("%m%d")!= days) and (now.strftime("%H")== "06"):
+            oneday()
+            days = now.strftime("%m%d")
+            print "a"
+        main()
+        #ここ削除
+        for ts in timedict.keys():
+            timeStump = int(ts.split(".")[0])
+            timeStump = timeStump + delTime
+            if int(time.time()) > timeStump:
+                r = delete(timedict[ts], ts)
+                del timedict[ts]
+        time.sleep(1)
