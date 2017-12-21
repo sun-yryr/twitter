@@ -156,10 +156,11 @@ def channelCreated(dict):
             "text": chdata["name"],
             "color":"#00FF00"
             }]
-    SC.send(msg, "yryr", False, attachments)
+    SC.send(msg, "general", False, attachments)
 
 def oneday():
     r = f.ktxDownload()
+    msg = ("今日は{}です。おはようございます。\n".format(now.strftime("%m月%d日(%a)")))
     """
     今日はm月d日(a)
     >天気の情報
@@ -171,27 +172,41 @@ def oneday():
                 "text":"[工事中]",
                 "color":"#31B404"
             },{
-                "title":"課題",
-                "text":"[工事中]",
+                "title":"電車",
+                "text":f.traininfo(),
                 "color":"#FF0000"
+            }
+        ]
+    if ((now.strftime("%a")== "Sat") or (now.strftime("%a")== "Sun")):
+        return
+    elif (now.strftime("%a")== "Mon"):
+        f.touban("chenge")
+        tmp = [{
+                "title":"日直",
+                "text":f.touban(1),
+                "color":"#00FFFF"
             },{
+                "title":"掃除当番",
+                "text":f.touban(0),
+                "color":"#00BFFF"
+            }]
+        attachments.extend(tmp)
+    else:
+        tmp = {
                 "title":"日直",
                 "text":f.touban(1),
                 "color":"#00FFFF"
             }
-        ]
-    if (now.strftime("%a")== "Mon"):
+        attachments.append(tmp)
+    if r is None:
+        text = "J科サイトに接続できません。ktxが最新でない場合があります。"
         tmp = {
-                "title":"掃除当番",
-                "text":f.touban(0),
-                "color":"#00BFFF"
+                "title":"ktx",
+                "text":text,
+                "color":"#848484"
             }
         attachments.append(tmp)
-    
-    msg = ("今日は{}です。おはようございます。\n".format(now.strftime("%m月%d日(%a)")))
     SC.send(msg, "schedule", False, attachments)
-    if r is None:
-        SC.send("J科サイトに接続できません。ktxが最新でない場合があります。", "schedule", False)
 
 if __name__ == '__main__':
     #接続開始

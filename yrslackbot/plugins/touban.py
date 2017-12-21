@@ -17,9 +17,6 @@ def main():
         if count[1]==(len(members)+1):
             count[1] = 1
     #print -> slack.message
-    print a
-    print b
-
     Path = os.getcwd()
     os.remove(Path+"/plugins/num.txt")
     f = open(Path+"/plugins/num.txt","w")
@@ -67,6 +64,3 @@ def m_print():
             count[1] = 1
     msg = [a,b]
     return msg
-
-if __name__ == '__main__':
-    main()

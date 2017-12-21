@@ -6,9 +6,12 @@ import json
 import os
     
 def touban(a):
+    if a == "chenge":
+        msg = T.main()
+        return
     msg = T.m_print()
     #print -> slack.message
-    if a==0:
+    if a == 0:
         return msg[0]
     else:
         return msg[1]
