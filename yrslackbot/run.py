@@ -29,7 +29,6 @@ class Slackclient():
                 attachments = attach,
                 as_user = True
                 )
-        print res
         if saveBool == True:
             self.timesave(res)
         return res
