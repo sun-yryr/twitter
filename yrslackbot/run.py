@@ -154,7 +154,7 @@ def channelCreated(dict):
     msg = "channelが作成されました。"
     attachments = [{
             "text": chdata["name"],
-            "color":"#36a64f"
+            "color":"#00FF00"
             }]
     SC.send(msg, "yryr", False, attachments)
 
@@ -169,14 +169,26 @@ def oneday():
             {
                 "title":"天気",
                 "text":"[工事中]",
-                "color":"#36a64f"
+                "color":"#31B404"
             },{
                 "title":"課題",
                 "text":"[工事中]",
                 "color":"#FF0000"
+            },{
+                "title":"日直",
+                "text":f.touban(1),
+                "color":"#00FFFF"
             }
         ]
-    msg = ("今日は{}\n".format(now.strftime("%m月%d日(%a)")))
+    if (now.strftime("%a")== "Mon"):
+        tmp = {
+                "title":"掃除当番",
+                "text":f.touban(0),
+                "color":"#00BFFF"
+            }
+        attachments.append(tmp)
+    
+    msg = ("今日は{}です。おはようございます。\n".format(now.strftime("%m月%d日(%a)")))
     SC.send(msg, "schedule", False, attachments)
     if r is None:
         SC.send("J科サイトに接続できません。ktxが最新でない場合があります。", "schedule", False)
