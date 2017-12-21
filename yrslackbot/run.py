@@ -80,8 +80,8 @@ def main():
         #type分岐[message]
         if "message" == type:
             message(read)
-        elif "c" == type:
-            pass
+        elif "channel_created" == type:
+            channelCreated(read)
         else:
             pass
 
@@ -148,6 +148,15 @@ def message(dict):
                 #ドコモの人工知能に返信を任せる
                 msg = f.docomo(cmd.group(1), config.docomo_apikey)
                 SC.sendMention(msg, False)
+
+def channelCreated(dict):
+    chdata = dict["channel"]
+    msg = "channelが作成されました。"
+    attachments = [{
+            "text": chdata["name"],
+            "color":"#36a64f"
+            }]
+    SC.send(msg, "yryr", False, attachments)
 
 def oneday():
     r = f.ktxDownload()
