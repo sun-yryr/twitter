@@ -21,13 +21,15 @@ class Slackclient():
             return self.read
         else:
             return None
-    def send(self, msg, ch, saveBool):
+    def send(self, msg, ch, saveBool, attach=None):
         res = self.slackclient.api_call(
                 "chat.postMessage",
                 channel = ch,
                 text = msg,
+                attachments = attach,
                 as_user = True
                 )
+        print res
         if saveBool == True:
             self.timesave(res)
         return res
@@ -40,13 +42,14 @@ class Slackclient():
                 thread_ts = self.read["ts"]
                 )
         return res
-    def sendMention(self, msg, saveBool):
+    def sendMention(self, msg, saveBool, attach=None):
         user = ("<@" + self.read["user"] + ">:")
         user = user.encode("utf-8")
         res = self.slackclient.api_call(
                 "chat.postMessage",
                 channel = self.read["channel"],
                 text = (user + msg),
+                attachments = attach,
                 as_user = True
                 )
         if saveBool == True:
@@ -91,8 +94,8 @@ def message(dict):
         cmd = prog.match(dict["text"])
         msg = ""
         if cmd is not None:
+            #運行状況
             if "train" == cmd.group(1):
-                #運行状況
                 if "all" == cmd.group(2):
                     msg = f.traininfo("all")
                     SC.sendMention(msg, True)
@@ -102,6 +105,7 @@ def message(dict):
                 else:
                     msg = f.traininfo()
                     SC.sendMention(msg, True)
+            #実プロの提出状況
             elif "ktx" == cmd.group(1):
                 if re.compile(r'[0-4][0-9]').search(cmd.group(2)):
                     username = ("3J" + cmd.group(2))
@@ -110,15 +114,19 @@ def message(dict):
                 else:
                     msg = ("出席番号を入力してください")
                 SC.sendMention(msg, True)
+            #日直
             elif "duty" == cmd.group(1):
                 msg = ("今週の日直は\n%sです" % f.touban(1))
                 SC.sendMention(msg, True)
+            #掃除当番
             elif "clean" == cmd.group(1):
                 msg = ("今週の掃除当番は\n%sです" % f.touban(0))
                 SC.sendMention(msg, True)
+            #コマンド表示
             elif "help" == cmd.group(1):
                 msg = ("\n掃除当番[clean]\n日直[duty]\n鉄道運行状況[train (all)]\n北越[ktx]")
                 SC.sendMention(msg, True)
+            #変数変更(管理者用)
             elif "set" == cmd.group(1):
                 if "U30T49610" == dict["user"]:
                     list = cmd.group(2).split(":")
@@ -129,10 +137,12 @@ def message(dict):
                 else:
                     msg = ("権限がありません")
                 SC.sendMention(msg, True)
+            #何もないとき
             else:
                 msg = ("コマンドが未登録です")
                 SC.sendMention(msg, True)
         else:
+            #メンションが来た時
             cmd = mention.match(dict["text"])
             if cmd is not None:
                 #ドコモの人工知能に返信を任せる
@@ -146,10 +156,19 @@ def oneday():
     >天気の情報
     >課題の情報
     """
+    attachments = [
+            {
+                "title":"天気",
+                "text":"[工事中]",
+                "color":"#36a64f"
+            },{
+                "title":"課題",
+                "text":"[工事中]",
+                "color":"#FF0000"
+            }
+        ]
     msg = ("今日は{}\n".format(now.strftime("%m月%d日(%a)")))
-    msg += (">今日の天気[工事中]\n")
-    msg += (">今日の課題[工事中]\n")
-    SC.send(msg, "schedule", False)
+    SC.send(msg, "schedule", False, attachments)
     if r is None:
         SC.send("J科サイトに接続できません。ktxが最新でない場合があります。", "schedule", False)
 
@@ -158,7 +177,7 @@ if __name__ == '__main__':
     #messageの時間取得用
     while True:
         now = datetime.datetime.now()
-        #今日初めてかつ、7時代の時oneday実行
+        #今日初めてかつ、6時代の時oneday実行
         if (now.strftime("%m%d")!= days) and (now.strftime("%H")== "06"):
             oneday()
             days = now.strftime("%m%d")

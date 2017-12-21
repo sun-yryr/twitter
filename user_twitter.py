@@ -6,7 +6,7 @@ import json
 from requests_oauthlib import OAuth1Session
 import config
 
-def main(oauth):
+def main():
     #url_tweet = "https://api.twitter.com/1.1/statuses/update.json"
     #url_read = "https://api.twitter.com/1.1/statuses/home_timeline.json"
     url_myread = "https://api.twitter.com/1.1/statuses/user_timeline.json"
@@ -72,5 +72,5 @@ if __name__ == '__main__':
         print "oauth error\n"
         sys.exit(1)
     
-    main(oauth)
+    main()
 
