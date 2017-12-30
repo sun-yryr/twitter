@@ -13,7 +13,7 @@ def main():
     
     num = 1
     path = os.getcwd()
-    f = open(path + "/.id.txt","r+")
+    f = open(path + "/.id2","r+")
     Twi_id = f.read()
     
     params = {

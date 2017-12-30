@@ -1,5 +1,4 @@
 nohup.out
 config.py
 *.pyc
-*.txt
-.*.py
+.*
