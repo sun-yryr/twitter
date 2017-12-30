@@ -11,7 +11,9 @@ def main():
     #url_read = "https://api.twitter.com/1.1/statuses/home_timeline.json"
     url_myread = "https://api.twitter.com/1.1/statuses/user_timeline.json"
     
-    f = open("hdd1/dev/bot/id.txt","r+")
+    num = 1
+    path = os.getcwd()
+    f = open(path + "/.id.txt","r+")
     Twi_id = f.read()
     
     params = {
@@ -21,6 +23,7 @@ def main():
             "exclude_replies":True,
             "include_rts":False
         }
+
     req = oauth.get(url_myread, params = params)
 
     # レスポンスを確認
@@ -31,14 +34,22 @@ def main():
             user = tweet["user"]
             toukou = "[" + user["name"] + "]\n" + tweet["text"]
             notify(toukou,None)
-
-            try:
-                entities = tweet["extended_entities"]
+            entities = tweet.get("extended_entities")
+            if entities is not None:
                 for media in entities["media"]:
                     media_url = media["media_url"]
-                    notify(media_url,media_url)
-            except:
-                madia_url = None
+                    notify(media_url, media_url)
+                    
+                    filelist = os.filedir(path)
+                    picture = requests.get(media_url)
+                    name = "{0:03d}.png".format(num)
+                    while name in filelist:
+                        num = num + 1
+                        name = "{0:03d}.png".format(num)
+                    f2 = open(path)
+                    f2.write(picture.content)
+                    f2.close()
+                    
         if len(timeline) != 0:
             f.seek(0)
             f.write(tweet["id_str"])
