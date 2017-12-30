@@ -12,7 +12,7 @@ def main():
     url_myread = "https://api.twitter.com/1.1/statuses/user_timeline.json"
     
     path = "/home/pi/hdd1/dev/twitter/"
-    f = open(path + ".id.txt","r+")
+    f = open(path + ".id","r+")
     Twi_id = f.read()
     
     params = {
