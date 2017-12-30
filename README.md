@@ -4,6 +4,7 @@
 2. twitter/config.pyを作成
 3. config.pyに`Twi_CK`,`Twi_CS`,`Twi_AT`,`Twi_ATS`,`LINE_token`を書く
 4. twitter/.idを作成。適当な数字を入れておく
+5. 使いたいものに合わせて変更
 
 ### TwitterToLine.py
 誰かのtweetをlineに飛ばす（画像対応）
