@@ -10,7 +10,7 @@ import re
 def main():
     url_timeline = "https://api.twitter.com/1.1/statuses/user_timeline.json"
 
-    PATH = (os.getcwd() + "/yryr/")
+    PATH = "/home/pi/hdd1/yryr_picture/"
     num = 1
     f = open(PATH + ".id", "r+")
     Twi_id = f.read()
