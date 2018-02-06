@@ -30,15 +30,18 @@ def main():
             rt_bool = tweet.get("retweeted")
             entities = tweet.get("extended_entities")
             if rt_bool and not entities is None:
+                re_status = tweet["retweeted_status"]
+                re_user = re_status["user"]
+                re_name = re_user["screen_name"].encode("utf-8")
                 #print tweet_str
                 for media in entities["media"]:
                     picture = requests.get(media["media_url_https"])
                     FILE_LIST = os.listdir(PATH)
                     #print FILE_LIST
-                    name = "{0:03d}.png".format(num)
+                    name = re_name+"_{0:03d}.png".format(num)
                     while name in FILE_LIST:
                             num = num + 1
-                            name = "{0:03d}.png".format(num)
+                            name = re_name+"_{0:03d}.png".format(num)
                             #print name
                     f2 = open(PATH + name, "w")
                     f2.write(picture.content)
