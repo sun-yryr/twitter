@@ -34,18 +34,18 @@ def main():
                 re_name = re_user["screen_name"].encode("utf-8")
                 if not re_name in os.listdir(PATH):
                     os.makedirs(PATH + re_name)
-                PATH = PATH + re_name + "/"
+                path = PATH + re_name + "/"
                 #print tweet_str
                 for media in entities["media"]:
                     picture = requests.get(media["media_url_https"])
-                    FILE_LIST = os.listdir(PATH)
+                    FILE_LIST = os.listdir(path)
                     #print FILE_LIST
                     name = re_name+"_{0:04d}.png".format(num)
                     while name in FILE_LIST:
                             num = num + 1
                             name = re_name+"_{0:04d}.png".format(num)
                             #print name
-                    f2 = open(PATH + name, "w")
+                    f2 = open(path + name, "w")
                     f2.write(picture.content)
                     f2.close()
         if len(timeline) != 0:
