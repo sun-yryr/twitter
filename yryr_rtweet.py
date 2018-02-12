@@ -10,7 +10,6 @@ def main():
     url_timeline = "https://api.twitter.com/1.1/statuses/user_timeline.json"
 
     PATH = "/home/pi/hdd1/yryr_picture/"
-    num = 1
     f = open(PATH + ".id", "r+")
     Twi_id = f.read()
 
@@ -36,6 +35,7 @@ def main():
                     os.makedirs(PATH + re_name)
                 path = PATH + re_name + "/"
                 #print tweet_str
+                num = 1
                 for media in entities["media"]:
                     picture = requests.get(media["media_url_https"])
                     FILE_LIST = os.listdir(path)
