@@ -12,3 +12,5 @@
 [工事中]誰かのtweetから画像の抽出
 ### mercari_notify.py
 mercariをスクレイビング
+### yryr_retweet.py
+ゆるゆる( [@taittide](https://twitter.com/taittide) )の画像リツイートを保存していく
